@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#09090c">
+  <meta name="description" content="火星音乐 Mars Music V1.0 网页交互演示。本地音乐播放，不上传文件；在线版权曲库尚未开放。">
+  <title>火星音乐 Mars Music — 让音乐有自己的宇宙</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg aria-hidden="true" class="icon-defs" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="7"/><path d="m16 16 5 5"/></symbol>
+  <symbol id="ic-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+  <symbol id="ic-heart" viewBox="0 0 24 24"><path d="M20.8 4.9a5.5 5.5 0 0 0-7.8 0L12 5.9l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.3a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+  <symbol id="ic-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="ic-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.5 13.5 1.5 1-2 3.5-1.8-.8a7.4 7.4 0 0 1-2.2 1.3l-.2 2h-4l-.2-2a7.4 7.4 0 0 1-2.2-1.3l-1.8.8-2-3.5 1.5-1a7.3 7.3 0 0 1 0-3l-1.5-1 2-3.5 1.8.8a7.4 7.4 0 0 1 2.2-1.3l.2-2h4l.2 2a7.4 7.4 0 0 1 2.2 1.3l1.8-.8 2 3.5-1.5 1a7.3 7.3 0 0 1 0 3Z"/></symbol>
+  <symbol id="ic-upload" viewBox="0 0 24 24"><path d="M12 16V3m0 0L7 8m5-5 5 5M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
+  <symbol id="ic-play" viewBox="0 0 24 24"><path d="m8 5 12 7-12 7z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="ic-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3"/></symbol>
+  <symbol id="ic-next" viewBox="0 0 24 24"><path d="m5 5 10 7-10 7z" fill="currentColor" stroke="none"/><path d="M19 5v14" stroke-width="3"/></symbol>
+  <symbol id="ic-prev" viewBox="0 0 24 24"><path d="m19 5-10 7 10 7z" fill="currentColor" stroke="none"/><path d="M5 5v14" stroke-width="3"/></symbol>
+  <symbol id="ic-shuffle" viewBox="0 0 24 24"><path d="M3 7h3c5 0 7 10 12 10h3m0 0-3-3m3 3-3 3M3 17h3c1.7 0 3-1.2 4.2-3M14 9c1.1-1.2 2.4-2 4-2h3m0 0-3-3m3 3-3 3"/></symbol>
+  <symbol id="ic-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4m14-1v2a3 3 0 0 1-3 3H3"/></symbol>
+  <symbol id="ic-volume" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Zm13-1a6 6 0 0 1 0 8m2-11a10 10 0 0 1 0 14"/></symbol>
+  <symbol id="ic-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="ic-close" viewBox="0 0 24 24"><path d="M5 5 19 19M19 5 5 19"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+  <symbol id="ic-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M5 12c0-4 3-7 7-7"/></symbol>
+  <symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="ic-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+</svg>
+
+<div class="ambient ambient-left"></div><div class="ambient ambient-right"></div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#" data-view="home" aria-label="火星音乐首页">
+      <span class="brand-logo"><span class="brand-planet"></span></span>
+      <span class="brand-name">火星音乐 <small>MARS MUSIC</small></span>
+    </a>
+    <div class="sidebar-subtitle">你的私人音乐宇宙</div>
+    <div class="nav-caption">探索音乐</div>
+    <nav id="sidebar-nav" aria-label="主导航">
+      <button class="nav-item active" data-view="home"><svg><use href="#ic-home"/></svg>为你推荐<span class="nav-dot"></span></button>
+      <button class="nav-item" data-view="search"><svg><use href="#ic-search"/></svg>搜索音乐</button>
+      <button class="nav-item" data-view="local"><svg><use href="#ic-music"/></svg>本地音乐<span id="local-count" class="nav-count">0</span></button>
+      <div class="nav-caption nav-caption-secondary">我的空间</div>
+      <button class="nav-item" data-view="liked"><svg><use href="#ic-heart"/></svg>我喜欢的</button>
+      <button class="nav-item" data-view="playlists"><svg><use href="#ic-list"/></svg>我的歌单</button>
+      <button class="nav-item" data-view="settings"><svg><use href="#ic-settings"/></svg>设置中心</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="local-pill"><span class="pulse-dot"></span>本地优先 · 安全私享</div>
+      <div class="version">MARS MUSIC <span>V1.0 PREVIEW</span></div>
+    </div>
+  </aside>
+
+  <div class="content-shell">
+    <header class="topbar">
+      <div class="mobile-brand"><span class="brand-logo mini"><span class="brand-planet"></span></span><strong>火星音乐</strong></div>
+      <div class="topbar-heading"><span class="top-eyebrow">MARS STATION / 01</span><span id="page-title">发现好音乐</span></div>
+      <button class="quick-search" id="quick-search" aria-label="打开搜索"><svg><use href="#ic-search"/></svg><span>搜索你喜欢的音乐...</span><kbd>⌘ K</kbd></button>
+      <div class="topbar-actions"><label class="upload-button" for="audio-input"><svg><use href="#ic-upload"/></svg><span>导入本地音乐</span></label><span class="user-avatar" title="火星旅人">M</span></div>
+      <input id="audio-input" type="file" accept="audio/*,.mp3,.m4a,.flac,.wav,.ogg,.aac" multiple hidden>
+    </header>
+
+    <main id="main-scroll">
+      <section class="view active" id="view-home">
+        <div class="hero">
+          <div class="hero-inner"><div class="hero-label"><span class="pulse-dot"></span> WELCOME TO YOUR MUSIC UNIVERSE</div>
+            <h1>让音乐，<br><em>有自己的宇宙。</em></h1>
+            <p>每一次心动，都值得被收藏。<br>这里是火星音乐，你的私人声音星球。</p>
+            <div class="hero-actions"><label class="primary-btn" for="audio-input"><svg><use href="#ic-upload"/></svg>开始听我的音乐</label><button class="ghost-btn" data-view="local">探索播放器 <svg><use href="#ic-arrow"/></svg></button></div>
+          </div>
+          <div class="hero-art"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit orbit-c"></div><div class="mars-globe"></div><div class="tiny-star star-one"></div><div class="tiny-star star-two"></div><div class="tiny-star star-three"></div></div>
+          <div class="hero-index">NO.001 / THE NEW SOUND ERA</div>
+        </div>
+        <div class="section-head"><div><span class="eyebrow">CURATED FOR YOU</span><h2>今夜，听点不一样的</h2></div><span class="section-hint">概念歌单 · 音乐界面展示</span></div>
+        <div class="featured-grid" id="featured-grid"></div>
+        <div class="section-head second"><div><span class="eyebrow">MUSIC COLLECTION</span><h2>宇宙里的声音</h2></div><button class="text-link" data-view="search">查看全部 <svg><use href="#ic-chevron"/></svg></button></div>
+        <div class="track-list" id="home-track-list"></div>
+        <div class="copyright-note"><svg><use href="#ic-lock"/></svg> 展示歌曲仅为虚构的界面样例，不含商业音源。导入自己的音频文件，即可在本机浏览器播放。</div>
+      </section>
+
+      <section class="view" id="view-search">
+        <div class="view-heading"><span class="eyebrow">FIND YOUR FREQUENCY</span><h1>搜索音乐<span class="accent">.</span></h1><p>搜索演示曲目，或从手机、电脑导入真正的本地音乐。</p></div>
+        <div class="search-field"><svg><use href="#ic-search"/></svg><input id="search-input" type="search" placeholder="搜索歌曲、艺术家或专辑..." autocomplete="off"><span>ENTER</span></div>
+        <div class="section-head compact"><h2 id="search-heading">全部歌曲</h2><span id="search-result-count" class="section-hint"></span></div>
+        <div class="track-list" id="search-results"></div>
+      </section>
+
+      <section class="view" id="view-local">
+        <div class="view-heading"><span class="eyebrow">YOUR OWN SOUND LIBRARY</span><h1>本地音乐<span class="accent">.</span></h1><p>你的文件只在当前浏览器里播放，不会上传到任何服务器。</p></div>
+        <div class="library-banner"><div class="library-disc"><svg><use href="#ic-disc"/></svg></div><div><strong id="local-banner-count">0 首本地歌曲</strong><p>把喜欢的音乐装进自己的宇宙</p></div><label class="primary-btn" for="audio-input"><svg><use href="#ic-plus"/></svg>添加歌曲</label></div>
+        <div class="section-head compact"><h2>我的曲库</h2><span class="section-hint">当前浏览器会话</span></div>
+        <div id="local-results" class="track-list"></div>
+        <div id="local-empty" class="empty-state"><div class="empty-icon"><svg><use href="#ic-music"/></svg></div><h3>你的音乐宇宙，还很安静</h3><p>点击「添加歌曲」，选择设备里的 MP3、FLAC、M4A 等音频文件。</p><label class="outline-btn" for="audio-input">从设备导入音乐</label></div>
+      </section>
+
+      <section class="view" id="view-liked">
+        <div class="view-heading"><span class="eyebrow">STAY WITH THE SOUND</span><h1>我喜欢的<span class="accent">.</span></h1><p>为每一次心动留下专属的红色标记。</p></div>
+        <div class="liked-banner"><div class="liked-symbol">♥</div><div><span>YOUR FAVORITES</span><h2>喜欢，就一直听下去。</h2><p><span id="liked-total">0</span> 首已收藏</p></div></div>
+        <div class="section-head compact"><h2>收藏列表</h2></div><div class="track-list" id="liked-results"></div>
+      </section>
+
+      <section class="view" id="view-playlists">
+        <div class="view-heading"><span class="eyebrow">THE PLAYLIST COLLECTION</span><h1>我的歌单<span class="accent">.</span></h1><p>把不同心情留在不同的播放空间里。</p></div>
+        <div class="playlist-grid"><button class="playlist-card playlist-red" data-view="liked"><span class="playlist-symbol">♥</span><span class="playlist-copy"><strong>我喜欢的音乐</strong><small>我的私人收藏</small></span><span class="round-arrow">↗</span></button><button class="playlist-card playlist-blue" id="playlist-night"><span class="playlist-symbol">☾</span><span class="playlist-copy"><strong>深夜漫游指南</strong><small>概念歌单 · 演示</small></span><span class="round-arrow">↗</span></button><button class="playlist-card playlist-amber" id="playlist-space"><span class="playlist-symbol">✦</span><span class="playlist-copy"><strong>星际信号</strong><small>概念歌单 · 演示</small></span><span class="round-arrow">↗</span></button></div>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="view-heading"><span class="eyebrow">YOUR MUSIC, YOUR RULES</span><h1>设置中心<span class="accent">.</span></h1><p>属于你的个人播放空间。</p></div>
+        <div class="settings-card"><h2>播放体验</h2><div class="setting-row"><span><strong>播放模式</strong><small>顺序、随机、单曲循环</small></span><button id="setting-mode" class="setting-action">列表循环</button></div><div class="setting-row"><span><strong>本地音乐隐私</strong><small>文件保留在设备上，不上传云端</small></span><span class="setting-success">✓ 本地处理</span></div><div class="setting-row"><span><strong>在线音乐</strong><small>等待获得合法版权授权后开放</small></span><span class="setting-muted">暂未开放</span></div><div class="setting-row"><span><strong>版本</strong><small>网页互动预览，与 Android 正式安装包分离</small></span><span class="setting-muted">V1.0 PREVIEW</span></div></div>
+      </section>
+    </main>
+  </div>
+
+  <aside class="now-sidebar"><div class="panel-top"><span class="eyebrow">NOW IN ORBIT</span><span class="panel-star">✧</span></div><h3>正在播放</h3>
+    <button class="now-art art-nebula" id="panel-cover" aria-label="打开全屏播放器"><div class="album-orbit"></div><span class="album-planet"></span><span class="album-stamp">MARS<br>MUSIC</span></button>
+    <div class="now-info"><strong id="side-title">等待你的第一首歌</strong><span id="side-artist">导入本地音乐，即刻出发</span></div>
+    <div class="panel-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="panel-divider"></div><div class="panel-note"><span class="pulse-dot"></span>私人星球，纯粹聆听。<br><small>让喜欢的音乐，陪你穿越每个夜晚。</small></div>
+    <div class="panel-bottom"><span>49° 30' N — MARS</span><span>VOL. 01</span></div>
+  </aside>
+</div>
+
+<div class="player-bar">
+  <button class="player-track" id="open-full-player" aria-label="展开播放器"><div id="bar-art" class="bar-cover art-nebula">✦</div><span><strong id="bar-title">火星音乐 · 等待启航</strong><small id="bar-artist">点击导入本地音乐开始播放</small></span></button>
+  <button class="player-like icon-button" id="like-current" aria-label="收藏当前歌曲"><svg><use href="#ic-heart"/></svg></button>
+  <div class="player-center"><div class="player-buttons"><button class="icon-button subtle desktop-only" id="shuffle-btn" title="随机播放"><svg><use href="#ic-shuffle"/></svg></button><button class="icon-button" id="previous-btn" aria-label="上一首"><svg><use href="#ic-prev"/></svg></button><button class="big-play" id="play-btn" aria-label="播放"><svg><use href="#ic-play"/></svg></button><button class="icon-button" id="next-btn" aria-label="下一首"><svg><use href="#ic-next"/></svg></button><button class="icon-button subtle desktop-only" id="repeat-btn" title="循环模式"><svg><use href="#ic-repeat"/></svg></button></div><div class="timeline"><span id="current-time">0:00</span><input id="seek-bar" type="range" min="0" max="100" value="0" aria-label="播放进度"><span id="total-time">0:00</span></div></div>
+  <div class="player-right"><button class="icon-button" id="queue-button" title="播放队列" aria-label="播放队列"><svg><use href="#ic-list"/></svg></button><svg class="volume-icon"><use href="#ic-volume"/></svg><input id="volume-bar" type="range" min="0" max="100" value="72" aria-label="音量"><button class="icon-button open-player-small" id="open-full-player-right" aria-label="全屏播放器">↗</button></div>
+</div>
+
+<nav class="mobile-nav" aria-label="手机导航"><button class="active" data-view="home"><svg><use href="#ic-home"/></svg><span>发现</span></button><button data-view="search"><svg><use href="#ic-search"/></svg><span>搜索</span></button><button data-view="local"><svg><use href="#ic-music"/></svg><span>本地</span></button><button data-view="liked"><svg><use href="#ic-heart"/></svg><span>喜欢</span></button><button data-view="playlists"><svg><use href="#ic-list"/></svg><span>我的</span></button></nav>
+
+<div class="full-player" id="full-player" role="dialog" aria-label="全屏播放器" aria-modal="true" hidden><div class="full-glow"></div><div class="full-header"><button class="icon-button" id="close-full"><svg><use href="#ic-close"/></svg></button><span>NOW PLAYING <small>MARS MUSIC</small></span><button class="icon-button" id="full-like" aria-label="收藏"><svg><use href="#ic-heart"/></svg></button></div><div class="full-body"><div class="vinyl-wrap"><div class="vinyl-record"><div class="vinyl-label"><span>✦</span></div></div><div class="vinyl-light"></div></div><div class="full-info"><span class="eyebrow">PERSONAL SOUND UNIVERSE</span><h2 id="full-title">等待你的第一首歌</h2><p id="full-artist">导入本地音乐，开启宇宙之旅</p><div class="full-timeline"><input id="full-seek" type="range" min="0" max="100" value="0" aria-label="全屏播放进度"><div><span id="full-current">0:00</span><span id="full-total">0:00</span></div></div><div class="full-controls"><button class="icon-button" id="full-shuffle" aria-label="随机播放"><svg><use href="#ic-shuffle"/></svg></button><button class="icon-button" id="full-prev" aria-label="上一首"><svg><use href="#ic-prev"/></svg></button><button class="full-play" id="full-play" aria-label="播放"><svg><use href="#ic-play"/></svg></button><button class="icon-button" id="full-next" aria-label="下一首"><svg><use href="#ic-next"/></svg></button><button class="icon-button" id="full-repeat" aria-label="循环播放"><svg><use href="#ic-repeat"/></svg></button></div><p class="full-tip">网页演示 · 仅本地导入的音频可以实际播放</p></div></div></div></div>
+<div class="queue-overlay" id="queue-overlay" hidden><div class="queue-header"><h3>播放队列</h3><button class="icon-button" id="close-queue"><svg><use href="#ic-close"/></svg></button></div><div class="queue-list" id="queue-list"></div><div class="queue-foot">本地歌曲仅在当前浏览器会话中保留</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<audio id="audio-player" preload="metadata"></audio>
+<script src="app.js" defer></script>
+</body>
+</html>
